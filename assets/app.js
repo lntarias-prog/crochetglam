@@ -142,6 +142,7 @@ function renderAll(){
         const price = document.createElement('span');
         price.textContent = p.price ? `${CONFIG.CURRENCY}${p.price}` : '';
         const cat = document.createElement('span');
+        cat.className = 'card-category';
         cat.textContent = p.category || '';
 
         meta.append(price, cat);
