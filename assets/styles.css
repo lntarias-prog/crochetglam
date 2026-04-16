@@ -99,17 +99,21 @@ img{max-width:100%;display:block}
 /* Títulos = Anton */
 /* Solo el titular principal (hero) en mayúsculas */
 .headline{
-  font-family:'Anton',sans-serif;
+  font-family:'Montserrat',sans-serif;
+  font-weight:700;
   letter-spacing:.06em;
   text-transform:uppercase;
 }
 
 /* El resto (section-title, card-title) solo cambian fuente, no mayúsculas */
-.section-title,
+.section-title{
+  font-family:'Montserrat', sans-serif;
+  font-weight:700;
+  letter-spacing:.04em;
+}
 .card-title{
   font-family:'Anton',sans-serif;
   letter-spacing:.06em;
-  /* sin text-transform */
 }
 
 /* Titular (ligeramente más pequeño como pediste) */
