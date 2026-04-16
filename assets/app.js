@@ -60,7 +60,8 @@ function buildHeroCarousel(products){
   const track = document.getElementById('hero-track');
   if (!track) return;
 
-  const slides = products.filter(p => p.slide && p.image_url);
+  const slides = products.filter(p => p.slide && p.image_url)
+    .sort(() => Math.random() - 0.5);
   if (!slides.length) return;
 
   // Duplicar para loop infinito seamless
