@@ -74,6 +74,10 @@ function buildHeroCarousel(products){
     track.appendChild(img);
   });
 
+  // Distancia exacta: N imágenes × ancho de cada una (25vw escritorio, 100vw móvil)
+  const imgVw = window.innerWidth <= 640 ? 100 : 25;
+  track.style.setProperty('--scroll-dist', `-${slides.length * imgVw}vw`);
+
   // ~5s por imagen → sensación lenta y elegante
   track.style.animationDuration = `${slides.length * 5}s`;
 }
