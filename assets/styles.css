@@ -76,17 +76,26 @@ img{max-width:100%;display:block}
   pointer-events: none;
 }
 
-/* Vídeo rellena sin salirse del hero */
-.hero-video{
+/* Carrusel hero */
+.hero-track{
   position: absolute;
-  inset: 0;
-  vertical-align: center;
-  width: 100%;
+  top: 0; left: 0;
   height: 100%;
+  display: flex;
+  will-change: transform;
+  animation: hero-scroll 40s linear infinite;
+  z-index: 0;
+}
+.hero-slide-img{
+  height: 100%;
+  width: 25vw;
+  object-fit: cover;
+  flex-shrink: 0;
   display: block;
-  object-fit: cover;                  /* recorta dentro del hero */
-  z-index: 0;                         /* por debajo del overlay */
-  filter: saturate(1.0) contrast(1.0);/* sin oscurecer: overlay ya aclara */
+}
+@keyframes hero-scroll{
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 /* Contenido del hero por encima del overlay */
@@ -164,15 +173,16 @@ img{max-width:100%;display:block}
 }
 .card{
   border:1px solid var(--line);border-radius:var(--radius);
-  box-shadow:var(--shadow);background:#fff;overflow:hidden
+  box-shadow:var(--shadow);background:#fff;overflow:hidden;
+  display:flex;flex-direction:column;
 }
 .card-img{aspect-ratio:1/1;object-fit:cover;background:#f8f8f8}
-.card-body{padding:16px}
+.card-body{padding:16px;display:flex;flex-direction:column;flex:1}
 .card-title{font-weight:900;margin:0 0 6px}
 .card-meta{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-weight:700}
 .card-info{font-size:.9rem;color:#555;margin:8px 0 4px}
 .buy-btn{
-  margin-top:10px;width:100%;display:inline-block;text-align:center;
+  margin-top:auto;padding-top:10px;width:100%;display:inline-block;text-align:center;
   border:1px solid var(--fg);padding:10px 14px;border-radius:12px;font-weight:800;background:#fff
 }
 .buy-btn:hover{background:var(--fg);color:#fff}

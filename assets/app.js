@@ -46,11 +46,35 @@ function groupBySection(products){
   const map = new Map();
   products.forEach(p => {
     const sec = norm(p.section) || 'Colección';
-    if (!map.has(sec)) map.set(sec, { section: sec, categories: new Set(), items: [] });
+    if (!map.has(sec)) map.set(sec, { section: sec, section_sort: p.section_sort, categories: new Set(), items: [] });
     map.get(sec).items.push(p);
     if (p.category) map.get(sec).categories.add(norm(p.category));
   });
-  return Array.from(map.values());
+  return Array.from(map.values())
+    .sort((a, b) => a.section_sort - b.section_sort)
+    .map(sec => { sec.items.sort((a, b) => a.sort - b.sort); return sec; });
+}
+
+/* ====================== Carrusel hero ====================== */
+function buildHeroCarousel(products){
+  const track = document.getElementById('hero-track');
+  if (!track) return;
+
+  const slides = products.filter(p => p.slide && p.image_url);
+  if (!slides.length) return;
+
+  // Duplicar para loop infinito seamless
+  [...slides, ...slides].forEach(p => {
+    const img = document.createElement('img');
+    img.src = p.image_url;
+    img.alt = p.title || '';
+    img.className = 'hero-slide-img';
+    img.loading = 'lazy';
+    track.appendChild(img);
+  });
+
+  // ~5s por imagen → sensación lenta y elegante
+  track.style.animationDuration = `${slides.length * 5}s`;
 }
 
 /* ====================== Renders ====================== */
@@ -328,6 +352,8 @@ function loadSheet(){
             info: norm(r.info || ''),
             visible: String(r.visible || 'TRUE').toUpperCase() !== 'FALSE',
             sort: parseInt(r.sort || '0', 10) || 0,
+            section_sort: parseInt(r['section-sort'] || '0', 10) || 0,
+            slide: String(r.slide || 'FALSE').toUpperCase() === 'TRUE',
             imgsec1: norm(r.imgsec1 || ''),
             imgsec2: norm(r.imgsec2 || ''),
             imgsec3: norm(r.imgsec3 || ''),
@@ -335,10 +361,11 @@ function loadSheet(){
             desc_larga: norm(r.desc_larga || '')
           };
         })
-        .filter(p => p.visible && p.section)
-        .sort((a,b)=> a.sort - b.sort);
+        .filter(p => p.visible && p.section);
 
         STATE.sections = groupBySection(STATE.products);
+
+        buildHeroCarousel(STATE.products);
 
         // CTA general
         const phoneFallback = STATE.products.find(p => p.whatsapp_phone)?.whatsapp_phone || CONFIG.DEFAULT_WHATSAPP_PHONE;
@@ -370,24 +397,6 @@ function loadSheet(){
     }
   }, 8000);
 }
-
-/* ===== Pausar vídeo del hero cuando no está visible ===== */
-document.addEventListener('DOMContentLoaded', () => {
-  const heroVideo = document.querySelector('.hero-video');
-  if (!heroVideo) return;
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        heroVideo.play().catch(()=>{});
-      } else {
-        heroVideo.pause();
-      }
-    });
-  }, { threshold: 0.2 }); // 20% visible
-
-  io.observe(heroVideo);
-});
 
 
 /* ====================== Init ====================== */
