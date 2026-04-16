@@ -34,8 +34,8 @@ img{max-width:100%;display:block}
   padding:14px 0;border-bottom:1px solid var(--line);background:#fff;position:relative;z-index:3
 }
 .brand-logo{height:50px;width:auto;object-fit:contain}
-.nav{display:flex;gap:18px;flex-wrap:wrap}
-.nav a{opacity:.9;transition:opacity .2s ease}
+.nav{display:flex;gap:18px;flex-wrap:wrap;justify-content:flex-end}
+.nav a{opacity:.9;transition:opacity .2s ease;font-size:15px}
 .nav a:hover{opacity:1}
 
 /* Botones (Nunito) */
