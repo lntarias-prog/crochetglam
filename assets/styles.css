@@ -1,0 +1,321 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+:root{
+  --bg:#fff; --fg:#111; --muted:#666; --line:#e9e9e9;
+  --shadow:0 10px 30px rgba(0,0,0,.06); --radius:20px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--fg)}
+
+/* Texto normal = Poppins */
+body{
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+/* Texto normal = Merienda 
+body{font-family:'Merienda', cursive; font-size:18px} */
+
+a{color:var(--fg);text-decoration:none}
+img{max-width:100%;display:block}
+
+/* Layout */
+.wrap{width:min(1200px,92%);margin:0 auto}
+
+/* ---------------- Header ---------------- */
+.site-header{
+  position: relative;   /* asegura capa propia */
+  z-index: 10;          /* por encima del hero/video */
+  background: #fff;     /* evita transparencias del vídeo */
+}
+.header-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;border-bottom:1px solid var(--line);background:#fff;position:relative;z-index:3
+}
+.brand-logo{height:50px;width:auto;object-fit:contain}
+.nav{display:flex;gap:18px;flex-wrap:wrap}
+.nav a{opacity:.9;transition:opacity .2s ease}
+.nav a:hover{opacity:1}
+
+/* Botones (Nunito) */
+.btn,.buy-btn,.filter-btn{font-family:'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif}
+
+/* ---------------- HERO (vídeo confinado + overlay blanco) ---------------- */
+.hero{
+  position: relative;
+  isolation: isolate;                 /* su propio stacking context: nada se desborda visualmente */
+  z-index: 1;                         /* por debajo del header */
+  height: clamp(380px, 68vh, 720px);  /* altura SOLO del hero */
+  overflow: hidden;                   /* confina el vídeo */
+  border-bottom: 1px solid var(--line);
+  background: #fff;                   /* fondo por si el vídeo tarda */
+}
+
+/* Capa de vídeo al fondo del hero */
+.hero-media{
+  position: absolute;
+  inset: 0;
+  z-index: 0;                         /* fondo */
+  overflow: hidden;
+}
+
+/* Overlay (velo) BLANCO para mejorar legibilidad del texto negro
+   Lo colocamos sobre el vídeo pero debajo del contenido */
+.hero-media::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,.65) 0%,
+      rgba(255,255,255,.58) 45%,
+      rgba(255,255,255,.40) 100%
+    );
+  pointer-events: none;
+}
+
+/* Vídeo rellena sin salirse del hero */
+.hero-video{
+  position: absolute;
+  inset: 0;
+  vertical-align: center;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;                  /* recorta dentro del hero */
+  z-index: 0;                         /* por debajo del overlay */
+  filter: saturate(1.0) contrast(1.0);/* sin oscurecer: overlay ya aclara */
+}
+
+/* Contenido del hero por encima del overlay */
+.hero .wrap,
+.hero-content{
+  position: relative;
+  z-index: 2;
+}
+
+/* Títulos = Anton */
+/* Solo el titular principal (hero) en mayúsculas */
+.headline{
+  font-family:'Anton',sans-serif;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+/* El resto (section-title, card-title) solo cambian fuente, no mayúsculas */
+.section-title,
+.card-title{
+  font-family:'Anton',sans-serif;
+  letter-spacing:.06em;
+  /* sin text-transform */
+}
+
+/* Titular (ligeramente más pequeño como pediste) */
+.headline{
+  line-height: 1;
+  font-size: clamp(30px, 7.5vw, 52px);
+  margin: 72px 0 8px;
+}
+
+/* Subtexto del hero */
+.headline .thin{font-weight:300;letter-spacing:.03em}
+.handwritten{font-size:clamp(14px,3.5vw,20px); color:#222}
+
+/* CTA del hero */
+.cta-row{
+  display:flex;gap:12px;margin:18px 0 48px;flex-wrap:wrap
+}
+.btn{
+  border:1px solid var(--fg);padding:12px 18px;border-radius:999px;font-weight:800;background:#fff;display:inline-block;text-align:center
+}
+.btn-primary{background:var(--fg);color:#fff}
+
+/* ---------------- Catálogo / Secciones ---------------- */
+.catalog-section{
+  position: relative;   /* asegura que esté por encima del hero si se solapan */
+  z-index: 0;
+  padding:48px 0;
+  background:#fff;      /* evita cualquier transparencia del vídeo en algunos navegadores */
+}
+.section-head{
+  display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap
+}
+.section-title{font-size:clamp(20px,6vw,34px);margin:0}
+.section-note{margin:0;color:var(--muted)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px}
+.filter-btn{border:1px solid var(--fg);padding:6px 12px;border-radius:999px;background:#fff;font-weight:700;cursor:pointer}
+.filter-btn.is-active{background:var(--fg);color:#fff}
+
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px
+}
+.card{
+  border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);background:#fff;overflow:hidden
+}
+.card-img{aspect-ratio:1/1;object-fit:cover;background:#f8f8f8}
+.card-body{padding:16px}
+.card-title{font-weight:900;margin:0 0 6px}
+.card-meta{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-weight:700}
+.card-info{font-size:.9rem;color:#555;margin:8px 0 4px}
+.buy-btn{
+  margin-top:10px;width:100%;display:inline-block;text-align:center;
+  border:1px solid var(--fg);padding:10px 14px;border-radius:12px;font-weight:800;background:#fff
+}
+.buy-btn:hover{background:var(--fg);color:#fff}
+
+/* ---------------- Footer ---------------- */
+.site-footer{
+  border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:14px;background:#fff
+}
+.site-footer .wrap{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px
+}
+
+/* ---------------- Estados (loading/error) ---------------- */
+.loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#fff;z-index:50}
+.error{color:#b00020;text-align:center;padding:12px}
+
+/* ---------------- Header móvil centrado ---------------- */
+@media (max-width: 640px) {
+  .header-inner {
+    flex-direction: column;          /* apila logo y nav */
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 0;
+  }
+
+  .brand {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .brand-logo {
+    height: 56px;                    /* un pelín más grande en móvil */
+    width: auto;
+    margin: 0 auto;                  /* centrado */
+  }
+
+  .nav {
+    width: 100%;
+    justify-content: center;         /* centra el menú */
+    text-align: center;
+    gap: 14px;
+    flex-wrap: wrap;                 /* por si hay muchos enlaces */
+  }
+
+  .nav a {
+    display: inline-block;
+    text-align: center;
+  }
+
+  /* Hero más compacto en móvil */
+  .hero{ height: clamp(320px, 58vh, 520px); }
+}
+
+/* === Botones y recuadros con esquinas rectas + Montserrat Light en botones === */
+
+    /* Esquinas rectas en todo */
+    :root{
+      --radius: 0; /* anula radios globales */
+    }
+    
+    /* Recuadros principales sin redondeo */
+    .card,
+    .grid .card,
+    .catalog-section,
+    .site-footer,
+    .header-inner,
+    .card-img,
+    input, textarea, select {
+      border-radius: 0 !important;
+    }
+    
+    /* Botones: Montserrat Light + esquinas rectas */
+    .btn,
+    .buy-btn,
+    .filter-btn {
+      font-family: 'Montserrat', sans-serif !important;
+      font-weight: 300 !important;      /* Light */
+      border-radius: 0 !important;       /* sin redondeo */
+    }
+/* Descripción más aireada */
+.card-info{
+  letter-spacing: 0.2px;   /* separa un poco las letras */
+  line-height: 1.6;        /* sube el interlineado */
+}
+
+/* (Opcional) En móvil, un pelín más aún */
+@media (max-width:640px){
+  .card-info{
+    letter-spacing: 0.25px;
+    line-height: 1.7;
+  }
+}
+.card-info{ hyphens:auto; }
+
+/* ===== Modal de producto ===== */
+.modal[aria-hidden="true"] { opacity: 0; pointer-events: none; }
+.modal[aria-hidden="false"] { opacity: 1; pointer-events: auto; }
+
+.modal{
+  position: fixed; inset: 0; z-index: 1000;
+  transition: opacity .25s ease;
+}
+.modal-backdrop{
+  position: absolute; inset: 0; background: rgba(0,0,0,.45);
+}
+.modal-dialog{
+  position: relative;
+  margin: 4vh auto;
+  width: min(100% - 24px, 1000px);
+  z-index: 1;
+}
+.modal-content{
+  background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+  border-radius: 0px; /* si quieres puntas rectas, usa 0 */
+  padding: 16px 16px 20px;
+}
+.modal-title{
+  font-family:'Anton', sans-serif;
+  letter-spacing:.02em;
+  text-transform:none;   /* 👈 Muestra el nombre tal cual viene del sheet */
+  margin: 6px 0 12px;
+  font-size: clamp(20px, 3.8vw, 28px);
+}
+.modal-body{
+  max-height: min(80vh, 100svh - 140px);
+  overflow: auto;
+}
+.modal-grid{
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;
+}
+.modal-gallery{
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.modal-gallery img{
+  width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block;
+  border: 1px solid var(--line);
+}
+.modal-text{
+  font-size: 16px; line-height: 1.7; color: #222;
+  white-space: pre-wrap;  /* respeta saltos si los hay */
+}
+.modal-close{
+  position: absolute; top: 6px; right: 8px; z-index: 2;
+  width: 36px; height: 36px; border-radius: 999px; border: 1px solid var(--line);
+  background: #fff; cursor: pointer; font-size: 22px; line-height: 1;
+}
+.modal-close:hover{ background: #f5f5f5; }
+
+/* Móvil: 1 columna */
+@media (max-width: 640px){
+  .modal-dialog{ margin: 2.5vh auto; }
+  .modal-grid{ grid-template-columns: 1fr; }
+  .modal-title{ margin-top: 0; }
+}
+

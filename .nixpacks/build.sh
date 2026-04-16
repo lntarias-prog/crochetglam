@@ -1,0 +1,1 @@
+docker build /etc/easypanel/projects/pruebas/ccglam/code/ -f /etc/easypanel/projects/pruebas/ccglam/code/.nixpacks/Dockerfile -t easypanel/pruebas/ccglam --build-arg GIT_SHA=undefined --build-arg NIXPACKS_METADATA=staticfile --label keep=true

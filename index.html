@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CROCHETGLAM — Handmade Crochet</title>
+  <meta name="description" content="Bikinis, bolsos, tops y accesorios de crochet hechos a mano.">
+  <!-- Fuentes: Anton (títulos), Merienda (texto), Nunito (botones) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Merienda:wght@400;700&family=Nunito:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Anton&family=Merienda:wght@400;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top" aria-label="CrochetGlam — inicio">
+        <img class="brand-logo" src="crochetglam_logo.png" alt="CrochetGlam" width="200" height="56" decoding="async" fetchpriority="high">
+      </a>
+      <nav class="nav" id="nav-links"><!-- secciones dinámicas --></nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-media">
+          <video class="hero-video" autoplay muted loop playsinline preload="auto">
+              <source src="images/hero_ccglam.mp4" type="video/mp4">
+          </video>
+      </div>
+      <div class="hero-content wrap">
+          <h1 class="headline">DISEÑOS EN<br><span class="thin">CROCHET</span></h1>
+          <p class="handwritten">Tradición y estilo, <br>unidos en cada punto.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#secciones">Ver colección</a>
+            <a class="btn" id="cta-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+          </div>
+      </div>
+    </div>
+
+    <!-- Secciones renderizadas por JS -->
+    <div id="secciones"></div>
+    
+    <section id="about" class="about-section">
+      <div class="wrap">
+        <h2 class="section-title reveal">Sobre la marca</h2>
+        <p class="about-text reveal">
+          Piezas tejidas a mano con paciencia y amor. Diseños juveniles, limpios y combinables. Si quieres un color o medida especial, escríbenos por WhatsApp y lo creamos a tu estilo.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© <span id="year"></span> CROCHETGLAM · Hecho a mano</p>
+      <p><a href="https://instagram.com/crochettglamm" target="_blank" rel="noopener">Instagram</a></p>
+    </div>
+  </footer>
+
+  <!-- UI states -->
+  <div id="loading" class="loading">Cargando…</div>
+  <div id="error" class="error" hidden>No pudimos cargar la hoja. Revisa el enlace CSV publicado o los encabezados.</div>
+
+  <!-- Libs + App -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="assets/app.js"></script>
+  
+  <!-- === Modal de producto === -->
+<div id="product-modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-dialog" role="document" aria-labelledby="modal-title">
+    <button class="modal-close" type="button" aria-label="Cerrar" data-close-modal>×</button>
+    <div class="modal-content">
+      <h3 id="modal-title" class="modal-title">Título del producto</h3>
+      <div class="modal-body">
+        <div class="modal-grid">
+          <div class="modal-gallery" id="modal-gallery">
+            <!-- Se insertan 0-4 <img> en 2x2 si existen -->
+          </div>
+          <div class="modal-text" id="modal-text">
+            <!-- Se inserta la descripción larga -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
