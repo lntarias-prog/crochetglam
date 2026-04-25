@@ -306,6 +306,7 @@ img{max-width:100%;display:block}
 }
 .modal-title{
   font-family:'Montserrat', sans-serif;
+  font-weight:500;
   letter-spacing:.02em;
   text-transform:none;   /* 👈 Muestra el nombre tal cual viene del sheet */
   margin: 6px 0 12px;
