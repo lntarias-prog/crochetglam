@@ -5,11 +5,11 @@ a{color:var(--fg);text-decoration:none}
 .site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.8);backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid var(--line)}
 .site-header .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
 .brand{display:flex;align-items:center;gap:10px}
-.brand-text{font-family:'Anton',sans-serif;letter-spacing:.04em;font-size:24px}
+.brand-text{font-family:'Montserrat',sans-serif;letter-spacing:.04em;font-size:24px}
 .brand-logo{width:36px;height:36px;object-fit:contain}
 .nav a{margin-left:18px;opacity:.8;transition:opacity .2s ease}.nav a:hover{opacity:1}
 .hero{padding:64px 0 24px;border-bottom:1px solid var(--line)}
-.headline{font-family:'Anton',sans-serif;letter-spacing:.03em;line-height:1.05;margin:0 0 12px;font-size:clamp(30px,6vw,52px);text-transform:uppercase}
+.headline{font-family:'Montserrat',sans-serif;letter-spacing:.03em;line-height:1.05;margin:0 0 12px;font-size:clamp(30px,6vw,52px);text-transform:uppercase}
 .subhead{margin:8px 0 0;color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;padding:28px 0 8px}
 .card{border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);background:#fff;overflow:hidden;transform:translateY(8px);transition:transform .25s ease, box-shadow .25s ease}
@@ -20,7 +20,7 @@ a{color:var(--fg);text-decoration:none}
 .btn{border:1px solid var(--fg);padding:12px 18px;border-radius:12px;font-weight:800;display:inline-block}
 .btn-primary{background:var(--fg);color:#fff}
 .btn-outline{background:#fff;color:var(--fg)}
-.section-title{font-family:'Anton',sans-serif;letter-spacing:.03em;text-transform:uppercase;font-size:clamp(22px,4vw,28px);margin:8px 0 0}
+.section-title{font-family:'Montserrat',sans-serif;letter-spacing:.03em;text-transform:uppercase;font-size:clamp(22px,4vw,28px);margin:8px 0 0}
 .tips{padding:8px 0 64px}
 .tips-list{display:grid;gap:8px;margin:12px 0 0;padding:0;list-style:none}
 .site-footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:14px}

@@ -305,7 +305,7 @@ img{max-width:100%;display:block}
   padding: 16px 16px 20px;
 }
 .modal-title{
-  font-family:'Anton', sans-serif;
+  font-family:'Montserrat', sans-serif;
   letter-spacing:.02em;
   text-transform:none;   /* 👈 Muestra el nombre tal cual viene del sheet */
   margin: 6px 0 12px;
