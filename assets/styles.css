@@ -344,3 +344,54 @@ img{max-width:100%;display:block}
   .modal-title{ margin-top: 0; }
 }
 
+/* ── Image security ────────────────────────────────── */
+.card-img,
+.hero-slide-img,
+.modal-gallery img {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* Wrapper relativo necesario para el overlay */
+.card,
+.modal-gallery {
+  position: relative;
+}
+
+/* Pseudo-overlay transparente que absorbe right-click sobre las imágenes de card */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* El body de la card queda por encima del overlay */
+.card-body {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Lazy loading skeleton ─────────────────────────── */
+.card-img[data-src],
+.hero-slide-img[data-src] {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  min-height: 220px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.card-img.loaded,
+.hero-slide-img.loaded {
+  animation: none;
+  background: none;
+  min-height: unset;
+}
+

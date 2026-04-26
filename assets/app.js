@@ -17,6 +17,26 @@ const $$ = (s) => Array.from(document.querySelectorAll(s));
 const norm  = (v) => (v ?? '').toString().trim();
 const lower = (v) => norm(v).toLowerCase();
 
+/* ── Lazy image loading ── */
+const imgObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const img = entry.target;
+    const src = img.dataset.src;
+    if (!src) return;
+    img.src = src;
+    img.removeAttribute('data-src');
+    img.classList.add('loaded');
+    imgObserver.unobserve(img);
+  });
+}, { rootMargin: '200px 0px' });
+
+/* Resuelve URL: usa ruta local si está en el mapa, si no la original */
+function resolveImg(url) {
+  if (!url) return '';
+  return (window.IMAGE_MAP && window.IMAGE_MAP[url]) || url;
+}
+
 /* Si falta 'section', dedúcela a partir de la categoría */
 function autoSectionFromCategory(category) {
   const c = lower(category);
@@ -67,10 +87,13 @@ function buildHeroCarousel(products){
   // Duplicar para loop infinito seamless
   [...slides, ...slides].forEach(p => {
     const img = document.createElement('img');
-    img.src = p.image_url;
     img.alt = p.title || '';
     img.className = 'hero-slide-img';
-    img.loading = 'lazy';
+    const heroSrc = resolveImg(p.image_url);
+    if (heroSrc) {
+      img.dataset.src = heroSrc;
+      imgObserver.observe(img);
+    }
     track.appendChild(img);
   });
 
@@ -80,6 +103,38 @@ function buildHeroCarousel(products){
 
   // ~5s por imagen → sensación lenta y elegante
   track.style.animationDuration = `${slides.length * 5}s`;
+}
+
+/* ====================== Sync detection ====================== */
+function detectUnmappedImages(products) {
+  if (!window.IMAGE_MAP) return;
+  const fields = ['image_url', 'imgsec1', 'imgsec2', 'imgsec3', 'imgsec4'];
+  const unmapped = new Set();
+  products.forEach(p => {
+    fields.forEach(f => {
+      const url = (p[f] || '').trim();
+      if (url && /^https?:\/\//i.test(url) && !window.IMAGE_MAP[url]) {
+        unmapped.add(url);
+      }
+    });
+  });
+  if (unmapped.size > 0) {
+    console.warn(`[sync] ${unmapped.size} imagen(es) sin caché local. Ejecuta: cd sync && node sync.js`);
+    showSyncBanner(unmapped.size);
+  }
+}
+
+function showSyncBanner(count) {
+  if (localStorage.getItem('admin') !== 'true') return;
+  let banner = document.getElementById('sync-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'sync-banner';
+    banner.style.cssText = 'position:fixed;bottom:16px;right:16px;background:#111;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;z-index:9999;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.25)';
+    document.body.appendChild(banner);
+  }
+  banner.innerHTML = `⚠️ <strong>${count} imagen(es) nueva(s)</strong> sin caché local.<br><small>Ejecuta <code style="background:#333;padding:2px 6px;border-radius:4px">node sync/sync.js</code> y reconstruye.</small>
+    <button onclick="document.getElementById('sync-banner').remove()" style="display:block;margin-top:8px;background:#444;border:none;color:#fff;padding:4px 10px;border-radius:6px;cursor:pointer">Cerrar</button>`;
 }
 
 /* ====================== Renders ====================== */
@@ -154,9 +209,12 @@ function renderAll(){
 
         const img = document.createElement('img');
         img.className = 'card-img';
-        img.loading = 'lazy';
         img.alt = p.title;
-        img.src = p.image_url || '';
+        const resolvedSrc = resolveImg(p.image_url);
+        if (resolvedSrc) {
+          img.dataset.src = resolvedSrc;
+          imgObserver.observe(img);
+        }
         card.appendChild(img);
 
         const body = document.createElement('div');
@@ -280,9 +338,10 @@ function openProductModal(product){
   if (imgs.length){
     imgs.slice(0,4).forEach(src => {
       const img = document.createElement('img');
-      img.src = src;
+      const resolvedModalSrc = resolveImg(src);
+      img.dataset.src = resolvedModalSrc;
       img.alt = product.title || 'Imagen de producto';
-      img.loading = 'lazy';
+      imgObserver.observe(img);
       galEl.appendChild(img);
     });
     galEl.style.display = '';
@@ -369,6 +428,7 @@ function loadSheet(){
         .filter(p => p.visible && p.section);
 
         STATE.sections = groupBySection(STATE.products);
+        detectUnmappedImages(STATE.products);
 
         buildHeroCarousel(STATE.products);
 
@@ -404,5 +464,33 @@ function loadSheet(){
 }
 
 
+/* ── Image security: block right-click and drag ── */
+document.addEventListener('contextmenu', (e) => {
+  // Con pointer-events:none en img, el target es el card o el overlay
+  if (
+    e.target.tagName === 'IMG' ||
+    e.target.closest('.card') ||
+    e.target.closest('.modal-gallery') ||
+    e.target.closest('.hero-media')
+  ) e.preventDefault();
+}, { capture: true });
+
+document.addEventListener('dragstart', (e) => {
+  if (e.target.tagName === 'IMG') e.preventDefault();
+}, { capture: true });
+
 /* ====================== Init ====================== */
-document.addEventListener('DOMContentLoaded', loadSheet);
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const res = await fetch('images/image_map.json');
+    if (res.ok) {
+      window.IMAGE_MAP = await res.json();
+      console.log(`[image_map] ${Object.keys(window.IMAGE_MAP).length} imágenes cacheadas localmente`);
+    } else {
+      window.IMAGE_MAP = {};
+    }
+  } catch {
+    window.IMAGE_MAP = {};
+  }
+  loadSheet();
+});
