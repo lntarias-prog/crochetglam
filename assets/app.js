@@ -31,10 +31,8 @@ const imgObserver = new IntersectionObserver((entries) => {
   });
 }, { rootMargin: '200px 0px' });
 
-/* Resuelve URL: usa ruta local si está en el mapa, si no la original */
 function resolveImg(url) {
-  if (!url) return '';
-  return (window.IMAGE_MAP && window.IMAGE_MAP[url]) || url;
+  return url || '';
 }
 
 /* Si falta 'section', dedúcela a partir de la categoría */
@@ -103,38 +101,6 @@ function buildHeroCarousel(products){
 
   // ~5s por imagen → sensación lenta y elegante
   track.style.animationDuration = `${slides.length * 5}s`;
-}
-
-/* ====================== Sync detection ====================== */
-function detectUnmappedImages(products) {
-  if (!window.IMAGE_MAP) return;
-  const fields = ['image_url', 'imgsec1', 'imgsec2', 'imgsec3', 'imgsec4'];
-  const unmapped = new Set();
-  products.forEach(p => {
-    fields.forEach(f => {
-      const url = (p[f] || '').trim();
-      if (url && /^https?:\/\//i.test(url) && !window.IMAGE_MAP[url]) {
-        unmapped.add(url);
-      }
-    });
-  });
-  if (unmapped.size > 0) {
-    console.warn(`[sync] ${unmapped.size} imagen(es) sin caché local. Ejecuta: cd sync && node sync.js`);
-    showSyncBanner(unmapped.size);
-  }
-}
-
-function showSyncBanner(count) {
-  if (localStorage.getItem('admin') !== 'true') return;
-  let banner = document.getElementById('sync-banner');
-  if (!banner) {
-    banner = document.createElement('div');
-    banner.id = 'sync-banner';
-    banner.style.cssText = 'position:fixed;bottom:16px;right:16px;background:#111;color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;z-index:9999;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.25)';
-    document.body.appendChild(banner);
-  }
-  banner.innerHTML = `⚠️ <strong>${count} imagen(es) nueva(s)</strong> sin caché local.<br><small>Ejecuta <code style="background:#333;padding:2px 6px;border-radius:4px">node sync/sync.js</code> y reconstruye.</small>
-    <button onclick="document.getElementById('sync-banner').remove()" style="display:block;margin-top:8px;background:#444;border:none;color:#fff;padding:4px 10px;border-radius:6px;cursor:pointer">Cerrar</button>`;
 }
 
 /* ====================== Renders ====================== */
@@ -428,7 +394,6 @@ function loadSheet(){
         .filter(p => p.visible && p.section);
 
         STATE.sections = groupBySection(STATE.products);
-        detectUnmappedImages(STATE.products);
 
         buildHeroCarousel(STATE.products);
 
@@ -480,17 +445,4 @@ document.addEventListener('dragstart', (e) => {
 }, { capture: true });
 
 /* ====================== Init ====================== */
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const res = await fetch('images/image_map.json');
-    if (res.ok) {
-      window.IMAGE_MAP = await res.json();
-      console.log(`[image_map] ${Object.keys(window.IMAGE_MAP).length} imágenes cacheadas localmente`);
-    } else {
-      window.IMAGE_MAP = {};
-    }
-  } catch {
-    window.IMAGE_MAP = {};
-  }
-  loadSheet();
-});
+document.addEventListener('DOMContentLoaded', loadSheet);
